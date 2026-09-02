@@ -1,6 +1,10 @@
 use tokio::net::TcpListener;
 use axum::{Router, routing::get};
 
+//_____________________________________________________________________________
+
+// SECTION: Route Handlers
+
 async fn root_get() -> String {
     format!("This is the route: /\n")
 }
@@ -9,13 +13,16 @@ async fn users_get() -> String {
     format!("This is the route: /users\n")
 }
 
+//_____________________________________________________________________________
+
 #[tokio::main]
 async fn main() {
 
     // Creates a TCP listener
-    let listener = TcpListener::bind("127.0.0.1:2986").await.unwrap();
+    let tcp_listener = TcpListener::bind("127.0.0.1:2986").await.unwrap();
 
-    let app: Router<()> = Router::new()
+    // Creates an Axum Router with route handlers attached.
+    let axum_router: Router<()> = Router::new()
         .route("/", get(root_get))
         .route("/users", get(users_get));
 
@@ -33,7 +40,7 @@ async fn main() {
     // The second Router is axum's built in way to automatically handle
     // requests that don't match any routes.
 
-    let server = axum::serve(listener, app);
+    let server = axum::serve(tcp_listener, axum_router);
 
     // Displays the connection information of the server
     println!("\nAttempting to start server at this network address:");
