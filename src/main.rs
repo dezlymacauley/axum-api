@@ -3,6 +3,14 @@ use axum::{Router, extract::Path, routing::get};
 
 //_____________________________________________________________________________
 
+// SECTION: Graceful shutdown
+
+// async fn listen_for_shutdown_signal() {
+//     tokio::si
+// }
+
+//_____________________________________________________________________________
+
 // SECTION: Route Handlers
 
 async fn root_get() -> String {
@@ -37,7 +45,7 @@ async fn main() {
     // Creates a TCP listener
     let tcp_listener = TcpListener::bind("127.0.0.1:2986").await.unwrap();
 
-    // Creates an Axum Router with route handlers attached.
+    // Creates an Axum Router with route handlers attached
     let axum_router: Router<()> = Router::new()
         .route("/", get(root_get))
         .route("/users", get(users_get))
