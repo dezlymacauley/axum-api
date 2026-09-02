@@ -1,5 +1,5 @@
 use tokio::net::TcpListener;
-use axum::{Router, routing::get};
+use axum::{Router, extract::Path, routing::get};
 
 //_____________________________________________________________________________
 
@@ -11,6 +11,18 @@ async fn root_get() -> String {
 
 async fn users_get() -> String {
     format!("This is the route: /users\n")
+}
+
+async fn users_get_username(Path(username): Path<String>) -> String {
+
+    let username: String = username; 
+
+    let response = format!(
+        "This is the route: /users\n\
+        The path parameter `username` is: {username}\n"
+    );
+
+    response
 }
 
 async fn posts_get() -> String {
@@ -29,6 +41,7 @@ async fn main() {
     let axum_router: Router<()> = Router::new()
         .route("/", get(root_get))
         .route("/users", get(users_get))
+        .route("/users/{:username}", get(users_get_username))
         .route("/posts", get(posts_get));
 
     // The data type of server is:
@@ -39,10 +52,10 @@ async fn main() {
     // will be comming from.
 
     // 2. Router, Router
-    // This first Router is the user defined service for handling routes 
-    // that you defined.
+    // This first `Router` is the `axum_router` variable, 
+    // for handling requests made to specific endpoints.
 
-    // The second Router is axum's built in way to automatically handle
+    // The second `Router` is axum's built in way to automatically handle
     // requests that don't match any routes.
 
     let server = axum::serve(tcp_listener, axum_router);
