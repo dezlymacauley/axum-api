@@ -25,6 +25,10 @@ async fn main() {
 
     let server = axum::serve(listener, app);
 
+    // Displays the connection information of the server
+    println!("\nAttempting to start server at this network address:");
+    println!("127.0.0.1:2986\n");
+
     // Starts the Axum server
     server.await.unwrap();
 }
