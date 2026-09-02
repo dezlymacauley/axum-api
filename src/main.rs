@@ -1,5 +1,9 @@
 use tokio::net::TcpListener;
-use axum::Router;
+use axum::{Router, routing::get};
+
+async fn root_get() -> String {
+    format!("This is the route: /\n")
+}
 
 #[tokio::main]
 async fn main() {
@@ -7,7 +11,8 @@ async fn main() {
     // Creates a TCP listener
     let listener = TcpListener::bind("127.0.0.1:2986").await.unwrap();
 
-    let app: Router<()> = Router::new();
+    let app: Router<()> = Router::new()
+        .route("/", get(root_get));
 
     // The data type of server is:
     // Serve<TcpListener, Router, Router>
