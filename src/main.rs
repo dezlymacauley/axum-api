@@ -5,6 +5,10 @@ async fn root_get() -> String {
     format!("This is the route: /\n")
 }
 
+async fn users_get() -> String {
+    format!("This is the route: /users\n")
+}
+
 #[tokio::main]
 async fn main() {
 
@@ -12,7 +16,8 @@ async fn main() {
     let listener = TcpListener::bind("127.0.0.1:2986").await.unwrap();
 
     let app: Router<()> = Router::new()
-        .route("/", get(root_get));
+        .route("/", get(root_get))
+        .route("/users", get(users_get));
 
     // The data type of server is:
     // Serve<TcpListener, Router, Router>
