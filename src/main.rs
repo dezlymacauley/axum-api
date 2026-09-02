@@ -13,6 +13,10 @@ async fn users_get() -> String {
     format!("This is the route: /users\n")
 }
 
+async fn posts_get() -> String {
+    format!("This is the route: /posts\n")
+}
+
 //_____________________________________________________________________________
 
 #[tokio::main]
@@ -24,7 +28,8 @@ async fn main() {
     // Creates an Axum Router with route handlers attached.
     let axum_router: Router<()> = Router::new()
         .route("/", get(root_get))
-        .route("/users", get(users_get));
+        .route("/users", get(users_get))
+        .route("/posts", get(posts_get));
 
     // The data type of server is:
     // Serve<TcpListener, Router, Router>
