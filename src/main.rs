@@ -1,5 +1,6 @@
 use tokio::net::TcpListener;
-use axum::{Router, extract::Path, routing::get};
+use axum::{Json, Router, extract::Path, routing::get};
+use serde::Serialize;
 
 //_____________________________________________________________________________
 
@@ -18,8 +19,16 @@ async fn root_get() -> String {
     format!("This is the route: /\n")
 }
 
-async fn users_get() -> String {
-    format!("This is the route: /users\n")
+async fn users_get() -> Json<UsersGetReponse> {
+    
+    let response = UsersGetReponse {
+
+        // Remember to remove the `\n` (newline character 
+        // when working with JSON)
+        message: format!("This is the route: /users")
+    };
+
+    Json(response)
 }
 
 async fn users_get_username(Path(username): Path<String>) -> String {
@@ -42,7 +51,11 @@ async fn posts_get() -> String {
 
 // SECTION: Response Structures
 
-
+// `Serialize` means, convert this Rust code to JSON
+#[derive(Serialize)]
+struct UsersGetReponse {
+    message: String
+}
 
 //_____________________________________________________________________________
 
