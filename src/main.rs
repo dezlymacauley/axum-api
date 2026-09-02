@@ -5,9 +5,9 @@ use axum::{Router, extract::Path, routing::get};
 
 // SECTION: Graceful shutdown
 
-// async fn listen_for_shutdown_signal() {
-//     tokio::si
-// }
+async fn listen_for_shutdown_signal() {
+    tokio::signal::ctrl_c().await.unwrap();
+}
 
 //_____________________________________________________________________________
 
@@ -49,7 +49,7 @@ async fn main() {
     let axum_router: Router<()> = Router::new()
         .route("/", get(root_get))
         .route("/users", get(users_get))
-        .route("/users/{:username}", get(users_get_username))
+        .route("/users/{username}", get(users_get_username))
         .route("/posts", get(posts_get));
 
     // The data type of server is:
@@ -66,7 +66,8 @@ async fn main() {
     // The second `Router` is axum's built in way to automatically handle
     // requests that don't match any routes.
 
-    let server = axum::serve(tcp_listener, axum_router);
+    let server = axum::serve(tcp_listener, axum_router)
+        .with_graceful_shutdown(listen_for_shutdown_signal());
 
     // Displays the connection information of the server
     println!("\nAttempting to start server at this network address:");
@@ -74,4 +75,6 @@ async fn main() {
 
     // Starts the Axum server
     server.await.unwrap();
+    
+    println!("\nThe server has been shutdown\n");
 }
