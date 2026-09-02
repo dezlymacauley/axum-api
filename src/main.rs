@@ -1,10 +1,30 @@
+use tokio::net::TcpListener;
 use axum::Router;
 
-fn main() {
+#[tokio::main]
+async fn main() {
 
-    // TODO: Satisfy the compiler warning without creating any new routes.
+    // Creates a TCP listener
+    let listener = TcpListener::bind("127.0.0.1:2986").await.unwrap();
 
-    let app = Router::new();
+    let app: Router<()> = Router::new();
 
-    // TODO: Listen on PORT 2986
+    // The data type of server is:
+    // Serve<TcpListener, Router, Router>
+
+    // 1. TcpListener
+    // This tells axum the network and port where TCP connections 
+    // will be comming from.
+
+    // 2. Router, Router
+    // This first Router is the user defined service for handling routes 
+    // that you defined.
+
+    // The second Router is axum's built in way to automatically handle
+    // requests that don't match any routes.
+
+    let server = axum::serve(listener, app);
+
+    // Starts the Axum server
+    server.await.unwrap();
 }
