@@ -3,8 +3,9 @@ use axum::{Router, extract::Path, routing::get};
 
 //_____________________________________________________________________________
 
-// SECTION: Graceful shutdown
+// SECTION: Helper Functions
 
+// This function will shutdown the server when the user presses `Ctrl C`
 async fn listen_for_shutdown_signal() {
     tokio::signal::ctrl_c().await.unwrap();
 }
@@ -36,6 +37,12 @@ async fn users_get_username(Path(username): Path<String>) -> String {
 async fn posts_get() -> String {
     format!("This is the route: /posts\n")
 }
+
+//_____________________________________________________________________________
+
+// SECTION: Response Structures
+
+
 
 //_____________________________________________________________________________
 
